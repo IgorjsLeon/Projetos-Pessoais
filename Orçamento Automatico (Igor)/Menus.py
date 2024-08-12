@@ -505,7 +505,6 @@ Atenciosamente,\n
 Igor
 Departamento de Vendas
 Veder
-(11) 2341-3132 / (11) 99305-5591
     """
     return texto
 
@@ -557,7 +556,6 @@ Atenciosamente,\n
 Igor
 Departamento de Vendas
 *Veder*
-*(11) 2341-3132 / (11) 99305-5591*
     """
     return texto
 
