@@ -889,7 +889,7 @@ def kit_servo(materiais):
     # Chave final gerada
     print(f"Chave gerada: {chave_gerada}")  # Debug: Verificar a chave gerada
 
-    # Agora buscamos essa chave no dicionário correspondente
+    # Busca essa chave no dicionário correspondente
     quantidade = int(input('Digite a quantidade do material: '))
     valor = converter_valor(input('Digite o valor do item com IPI: '))
     valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
