@@ -1,6 +1,7 @@
 import pyautogui
 import time
 import pyperclip
+import os
 
 #===================================DICIONARIOS===================================
 
@@ -201,11 +202,115 @@ def dicionarios():
 
     return inversores_220v, inversores_380_440v, soft220v, soft380_440v, encoder, kit_Servodrive220, kit_Servodrive380, indicadores_digitais
 
+#===================================FUNÇÃO ABRIR PROGRAMAS===================================
+
+def abrirprogramas():
+    loginQ4 = input("Digite o login do Q4: ")
+    senhaQ4 = input("Digite a senha do Q4: ")
+    senhaexcel = input("Digite a senha do Excel: ")
+    email_da_empresa = input("Digite o e-mail da empresa: ")
+    senhaemail = input("Digite a senha do e-mail: ")
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+#===================================FAZ LOGIN NO Q4===================================
+
+    time.sleep(1)
+    pyautogui.press('winleft')
+    time.sleep(1)
+    pyautogui.write('Q4 ERP')
+    time.sleep(3)
+    pyautogui.press('enter')
+    time.sleep(10)
+    pyautogui.write(loginQ4)
+    time.sleep(1)
+    pyautogui.press('tab')
+    time.sleep(1)
+    pyautogui.write(senhaQ4)
+    pyautogui.press('enter')
+    time.sleep(6)
+
+#===================================ABRE OS ARQUIVOS EXCEL===================================
+
+    pyautogui.press('winleft')
+    time.sleep(1)
+    pyautogui.typewrite('Vendas Igor', interval=0.30)
+    time.sleep(2)
+    pyautogui.press('enter')
+    time.sleep(5)
+    pyautogui.write(senhaexcel)
+    pyautogui.press('enter')
+    time.sleep(6)
+
+    pyautogui.press('winleft')
+    time.sleep(1)
+    pyautogui.typewrite('precos', interval=0.30)
+    time.sleep(2)
+    pyautogui.press('enter')
+    time.sleep(5)
+
+    pyautogui.press('winleft')
+    time.sleep(1)
+    pyautogui.typewrite('inversores', interval=0.30)
+    time.sleep(2)
+    pyautogui.press('enter')
+    time.sleep(6)
+
+
+#===================================ABRE O EDGE===================================
+
+    pyautogui.press('winleft')
+    time.sleep(1)
+    pyautogui.typewrite('EDGE', interval=0.30)
+    time.sleep(1)
+    pyautogui.press('enter')
+    time.sleep(2)
+    pyautogui.write('web.whatsapp.com')
+    time.sleep(1)
+    pyautogui.press('enter')
+    time.sleep(6)
+
+#===================================ABRE O CHROME===================================
+
+    pyautogui.press('winleft')
+    time.sleep(1)
+    pyautogui.typewrite('Chrome', interval=0.30)
+    time.sleep(1)
+    pyautogui.press('enter')
+    time.sleep(6)
+    pyautogui.write('web.whatsapp.com')
+    time.sleep(1)
+    pyautogui.press('enter')
+    time.sleep(4)
+    pyautogui.hotkey('ctrl', 't')
+    time.sleep(1)
+    pyautogui.write('webmail-seguro.com.br')
+    time.sleep(1)
+    pyautogui.press('enter')
+    time.sleep(4)
+    pyautogui.typewrite(email_da_empresa)
+    time.sleep(1)
+    pyautogui.press('tab')
+    time.sleep(1)
+    pyautogui.write(senhaemail)
+    time.sleep(1)
+    x=391
+    y=442
+    pyautogui.moveTo(x, y)
+    time.sleep(1)
+    pyautogui.click()
+    time.sleep(1)
+    x=517
+    y=551
+    pyautogui.moveTo(x, y)
+    time.sleep(1)
+    pyautogui.click()
+
 #===================================MENUS===================================
 
 def menu_geral():
     menu = True
     while menu:
+        os.system('cls' if os.name == 'nt' else 'clear')
         print ("#################################################")
         print ("#                                               #")
         print ("#       Envios de orçamento com Python          #")
@@ -214,7 +319,8 @@ def menu_geral():
         print ("#                                               #")
         print ("#       1- Orçamento via WhatsApp               #")
         print ("#       2- Orçamento via E-mail                 #")
-        print ("#       3- Fechar Programa                      #")
+        print ("#       3- Abrir programas                      #")
+        print ("#       4- Fechar Programa                      #")
         print ("#                                               #")
         print ("#################################################\n")
         menuwhatsapp = True
@@ -229,12 +335,17 @@ def menu_geral():
                 menuresposta = False
                 menu_email()
             elif resposta == '3':
+                menuresposta = False
+                abrirprogramas()
+            elif resposta == '4':
                 print ('Fechando programa!')
+                time.sleep(2)
                 menuresposta = False
                 menu = False
+                    
             else:
-                print('Opção Inválida.')
-            
+                print("Opção inválida. Por favor, escolha uma opção válida.")
+     
 def menu_whatsapp():
     print("\n#######################################")
     print('#                                     #')
@@ -575,41 +686,41 @@ def conta_IPI(valor, valor_IPI):
 #===================================FUNÇÕES PARA MENU DE MATERIAIS===================================
 
 def inversores(materiais):
-    material = input('Digite o nome do material: ').strip().lower()
-    tensao = int(input('Digite a tensão do material (220/380/440): '))
+    material = tratamento_erro_texto('Digite o nome do material (AC10, AC310): ', ['AC10', 'AC310'])
+    tensao = tratamento_erro_int('Digite a tensão do material (220/380/440): ', [220, 380, 440])
 
     modelo = None
     descricao_material = None
 
     if tensao == 220:
         if material == 'ac10':
-            cv = input("Digite a quantidade de CV (1, 2, 3): ").replace(',', '.')
-            quantidade = int(input('Digite a quantidade do material: '))
-            valor = converter_valor(input('Digite o valor do item com IPI: '))
-            valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+            cv = tratamento_erro_texto("Digite a quantidade de CV (1, 2, 3): ", ['1', '2', '3'])
+            quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+            valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+            valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
             valor_quantidade = valor * quantidade
             modelo, descricao_material = busca_inversor220v(material, cv)
         elif material == 'ac310':
-            cv = input("Digite a quantidade de CV (2, 3, 5,5, 7,5, 10, 15, 20, 25, 30, 40, 50, 75): ").replace(',', '.')
-            quantidade = int(input('Digite a quantidade do material: '))
-            valor = converter_valor(input('Digite o valor do item com IPI: '))
-            valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+            cv = tratamento_erro_texto("Digite a quantidade de CV (2, 3, 5,5, 7,5, 10, 15, 20, 25, 30, 40, 50, 75): ",['2', '3', '5,5', '7,5', '10', '15', '20', '25', '30', '40', '50', '75'])
+            quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+            valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+            valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
             valor_quantidade = valor * quantidade
             modelo, descricao_material = busca_inversor220v(material, cv)
 
     elif tensao in (380, 440):
         if material == 'ac10':
-            cv = input("Digite a quantidade de CV (1, 2, 3, 5,5, 7,5, 10): ").replace(',', '.')
-            quantidade = int(input('Digite a quantidade do material: '))
-            valor = float(input('Digite o valor do item com IPI: '))
-            valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+            cv = tratamento_erro_texto("Digite a quantidade de CV (1, 2, 3, 5,5, 7,5, 10): ", ['1', '2', '3', '5,5', '7,5', '10'])
+            quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+            valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+            valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
             valor_quantidade = valor * quantidade
             modelo, descricao_material = busca_inversor380_440v(material, cv)
         elif material == 'ac310':
-            cv = input("Digite a quantidade de CV (2, 3, 5,5, 7,5, 10, 15, 20, 25, 30, 40, 50, 75, 100,\n                           125, 150, 175, 200, 250, 275, 300, 350): ").replace(',', '.')
-            quantidade = int(input('Digite a quantidade do material: '))
-            valor = float(input('Digite o valor do item com IPI: '))
-            valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+            cv = tratamento_erro_texto("Digite a quantidade de CV (2, 3, 5,5, 7,5, 10, 15, 20, 25, 30, 40, 50, 75, 100,\n                           125, 150, 175, 200, 250, 275, 300, 350): ", ['2', '3', '5,5', '7,5', '10', '15', '20', '25', '30', '40', '50', '75', '100','\n'                          '125', '150', '175', '200', '250', '275', '300', '350'])
+            quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+            valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+            valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
             valor_quantidade = valor * quantidade
             modelo, descricao_material = busca_inversor380_440v(material, cv)
     else:
@@ -634,23 +745,23 @@ def inversores(materiais):
 
 def soft(materiais):
     material = 'SSV'
-    tensao = int(input('Digite a tensão do material (220/380/440): '))
+    tensao = tratamento_erro_int('Digite a tensão do material (220/380/440): ', [220, 380, 440])
 
     modelo = None
     descricao_material = None
 
     if tensao == 220:
-        cv = input("Digite a quantidade de CV (15, 30, 50, 75, 125, 200): ")
-        quantidade = int(input('Digite a quantidade do material: '))
-        valor = converter_valor(input('Digite o valor do item com IPI: '))
-        valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+        cv = tratamento_erro_texto("Digite a quantidade de CV (15, 30, 50, 75, 125, 200): ", ['15', '30', '50', '75', '125', '200'])
+        quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+        valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+        valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
         valor_quantidade = valor * quantidade
         modelo, descricao_material = busca_soft220v(material, cv)
     elif tensao in (380, 440):
-        cv = input("Digite a quantidade de CV (30, 60, 100, 150, 250, 300): ")
-        quantidade = int(input('Digite a quantidade do material: '))
-        valor = converter_valor(input('Digite o valor do item com IPI: '))
-        valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+        cv = tratamento_erro_texto("Digite a quantidade de CV (30, 60, 100, 150, 250, 300): ", ['30', '60', '100', '150', '250', '300'])
+        quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+        valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+        valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
         valor_quantidade = valor * quantidade
         modelo, descricao_material = busca_soft380_440v(material, cv)
     else:
@@ -674,9 +785,9 @@ def soft(materiais):
     })
 
 def encoder(materiais, respostamenuenc):
-    quantidade = int(input('Digite a quantidade do material: '))
-    valor = converter_valor(input('Digite o valor do item com IPI: '))
-    valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+    quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+    valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+    valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
     valor_quantidade = valor * quantidade
     modelo_parcial = 'Encoder Inc mod H40-8-'
 
@@ -710,9 +821,9 @@ def encoder(materiais, respostamenuenc):
     })
 
 def indicadores_digitais(materiais, respostamenuindicador):
-    quantidade = int(input('Digite a quantidade do material: '))
-    valor = converter_valor(input('Digite o valor do item com IPI: '))
-    valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+    quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+    valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+    valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
     valor_quantidade = valor * quantidade
 
     modelo_opcoes = {
@@ -746,167 +857,95 @@ def indicadores_digitais(materiais, respostamenuindicador):
         print('\nOpção de modelo inválida.\n')
 
 def kit_servo(materiais):
-    vmaterial = input("Digite o modelo do Kit (BASE, STANDARD, PROFINET, ETHERCAT):").strip().upper()
-    pergunta_freio = input('Com freio ou sem? (c / s): ').strip().lower()
-    tensao = int(input('Digite a tensão do material (220/380/440): '))
+    vmaterial = tratamento_erro_texto("Digite o modelo do Kit (BASE, STANDARD, PROFINET, ETHERCAT): ", ['BASE', 'STANDARD', 'PROFINET', 'ETHERCAT'])
+    pergunta_freio = tratamento_erro_texto('Com freio ou sem? (c / s): ', ['c', 's'])
+    tensao = tratamento_erro_int('Digite a tensão do material (220/380/440): ', [220, 380, 440])
 
     # Determinando o sufixo do freio
-    if pergunta_freio == 'c':
-        sufixo_freio = '-B'  # Indicativo de que tem freio
-    elif pergunta_freio == 's':
-        sufixo_freio = '-W'  # Indicativo de que não tem freio
-    else:
-        print("Opção de freio inválida. Use 'c' para com freio ou 's' para sem freio.")
-        return
+    sufixo_freio = '-B' if pergunta_freio == 'c' else '-W'
+    
+    base_material = 'SD700'
+    chave_gerada = None
 
-
-    # Definir a parte da chave relacionada ao modelo
     if tensao == 220:
-        kw = input("Digite a quantidade de Kw (0,4, 0,75, 1,0, 1,2, 2,0, 3,0, 4,4, 5,5): ").strip().replace(",", ".")
-        # Base para o código SD700
-        base_material = 'SD700'
-        if kw == '0,4' or kw == '0,75':
-            if vmaterial == "BASE":
-                modelo_chave = "P1" 
-            elif vmaterial == "STANDARD":
-                modelo_chave = "S1"
-            elif vmaterial == "PROFINET":
-                modelo_chave = "N1"
-            elif vmaterial == "ETHERCAT":
-                modelo_chave = "E1"
-            else:
-                print("Modelo inválido.")
-                return
-        else:
-            if vmaterial == "BASE":
-                modelo_chave = "P2" 
-            elif vmaterial == "STANDARD":
-                modelo_chave = "S2"
-            elif vmaterial == "PROFINET":
-                modelo_chave = "N2"
-            elif vmaterial == "ETHERCAT":
-                modelo_chave = "E2"
-            else:
-                print("Modelo inválido.")
-                return
-    elif tensao == 380:
-        kw = input("Digite a quantidade de Kw (1,0, 2,0, 3,0, 4,4, 5,5): ").strip().replace(",", ".")
-        # Base para o código SD700
-        base_material = 'SD700'
-        if vmaterial == "BASE":
-            modelo_chave = "P3" 
-        elif vmaterial == "STANDARD":
-            modelo_chave = "S3"
-        elif vmaterial == "PROFINET":
-            modelo_chave = "N3"
-        elif vmaterial == "ETHERCAT":
-            modelo_chave = "E3"
-        else:
+        kw = tratamento_erro_texto("Digite a quantidade de Kw (0,4, 0,75, 1,0, 1,2, 2,0, 3,0, 4,4, 5,5): ", ['0,4', '0,75', '1,0', '1,2', '2,0', '3,0', '4,4', '5,5'])
+        kw = kw.replace(',', '.')
+        
+        modelo_chave = {
+            "BASE": "P", "STANDARD": "S", "PROFINET": "N", "ETHERCAT": "E"
+        }.get(vmaterial.upper())  # Usar upper para garantir que a comparação seja feita com letras maiúsculas
+        
+        if not modelo_chave:
             print("Modelo inválido.")
             return
 
-    # Construindo a chave de acordo com a tensão e o Kw
-    if tensao == 220:
-        if pergunta_freio == 's':
+        if kw in ["0.4", "0.75"]:
+            modelo_chave = modelo_chave + "1"
             if kw == "0.4":
-                chave_gerada = f'{base_material}-{modelo_chave}-B-004-36-005{sufixo_freio}'
-            elif kw == "0.75":
-                chave_gerada = f'{base_material}-{modelo_chave}-C-008-36-005{sufixo_freio}'
-            elif kw == "1.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-010-23-005{sufixo_freio}'
-            elif kw == "1.2":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-012-35-005{sufixo_freio}'
-            elif kw == "2.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-020-23-005{sufixo_freio}'
-            elif kw == "3.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-030-23-005{sufixo_freio}'
-            elif kw == "4.4":
-                chave_gerada = f'{base_material}-{modelo_chave}-F-044-72-005{sufixo_freio}'
-            elif kw == "5.5":
-                chave_gerada = f'{base_material}-{modelo_chave}-F-055-72-005{sufixo_freio}'
+                rpm = '36'
+                flange_motor = 'B'
             else:
-                print("Configuração de Kw não encontrada para 220V.")
-                return
-        else:
-            if kw == "0.4":
-                chave_gerada = f'{base_material}-{modelo_chave}-B-004-36-005-W{sufixo_freio}'
-            elif kw == "0.75":
-                chave_gerada = f'{base_material}-{modelo_chave}-C-008-36-005-W{sufixo_freio}'
-            elif kw == "1.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-010-23-005-W{sufixo_freio}'
-            elif kw == "1.2":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-012-35-005-W{sufixo_freio}'
-            elif kw == "2.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-020-23-005-Y{sufixo_freio}'
-            elif kw == "3.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-030-23-005-Y{sufixo_freio}'
-            elif kw == "4.4":
-                chave_gerada = f'{base_material}-{modelo_chave}-F-044-72-005-Y{sufixo_freio}'
-            elif kw == "5.5":
-                chave_gerada = f'{base_material}-{modelo_chave}-F-055-72-005-Y{sufixo_freio}'
-            else:
-                print("Configuração de Kw não encontrada para 220V.")
-                return   
-    elif tensao == 380 or tensao == 440:
-        if pergunta_freio == 's':
-            if kw == "1.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-010-23-005{sufixo_freio}'
-            elif kw == "2.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-020-23-005{sufixo_freio}'
-            elif kw == "3.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-030-23-005{sufixo_freio}'
-            elif kw == "4.4":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-044-73-005{sufixo_freio}'
-            elif kw == "5.5":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-055-73-005{sufixo_freio}'
-            elif kw == "7.5":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-075-73-005{sufixo_freio}'
-            else:
-                print("Configuração de Kw não encontrada para 380V/440V.")
-                return
-        else:
-            if kw == "1.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-010-23-005-W{sufixo_freio}'
-            elif kw == "1.2":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-012-23-005-W{sufixo_freio}'
-            elif kw == "2.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-020-23-005-W{sufixo_freio}'
-            elif kw == "3.0":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-030-23-005-Y{sufixo_freio}'
-            elif kw == "4.4":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-044-73-005-Y{sufixo_freio}'
-            elif kw == "5.5":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-055-73-005-Y{sufixo_freio}'
-            elif kw == "7.5":
-                chave_gerada = f'{base_material}-{modelo_chave}-E-075-73-005-Y{sufixo_freio}'
-            else:
-                print("Configuração de Kw não encontrada para 380V/440V.")
-                return   
-    else:
-        print("Tensão inválida.")
-        return
+                kw = '08'
+                rpm = '34'
+                flange_motor = 'C'
 
-    # Chave final gerada
-    print(f"Chave gerada: {chave_gerada}")  # Debug: Verificar a chave gerada
+        else:
+            modelo_chave = modelo_chave + "2"
+            if kw in ["1.0", "1.2", "2.0", "3.0"]:
+                flange_motor = "E"
+                if kw in ["1.2"]:
+                    rpm = "35"
+                else:
+                    rpm = "23"
+            else:
+                if kw in ['4.4', '5.5']:
+                    flange_motor = "F"
+                    if kw in ['4.4']:
+                        rpm = "72"
+                    else:
+                        rpm = "78"
 
-    # Busca essa chave no dicionário correspondente
-    quantidade = int(input('Digite a quantidade do material: '))
-    valor = converter_valor(input('Digite o valor do item com IPI: '))
-    valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
-    valor_quantidade = valor * quantidade
+        chave_gerada = f'{base_material}-{modelo_chave}-{flange_motor}-0{kw.replace(".", "")}-{rpm}-005{sufixo_freio}'
+        
+    elif tensao in [380, 440]:
+        kw = tratamento_erro_texto("Digite a quantidade de Kw (1,0, 2,0, 3,0, 4,4, 5,5, 7,5): ", ['1,0', '2,0', '3,0', '4,4', '5,5', '7,5'])
+        kw = kw.replace(',', '.')
+        
+        modelo_chave = {
+            "BASE": "P3", "STANDARD": "S3", "PROFINET": "N3", "ETHERCAT": "E3"
+        }.get(vmaterial.upper())  # Usar upper para garantir que a comparação seja feita com letras maiúsculas
+
+        if not modelo_chave:
+            print("Modelo inválido.")
+            return
+        
+        if kw in ['1.0', '2.0', '3.0']:
+            flange_motor = "E"
+            rpm = "23"
+        else:
+            flange_motor = "F"
+            rpm = "73"
+
+        chave_gerada = f'{base_material}-{modelo_chave}-{flange_motor}-0{kw.replace(".", "")}-{rpm}-005{sufixo_freio}'
+
+
+    quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+    valor = converter_valor(tratamento_erro_texto('Digite o valor do item com IPI: '))
+    valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
     
+
     if tensao == 220:
         modelo, descricao_material = busca_kit220v(chave_gerada)
-    elif tensao == 380 or tensao == 440:
+    elif tensao in [380, 440]:
         modelo, descricao_material = busca_kit380v(chave_gerada)
+
 
     if not modelo:
         print('\nMaterial não encontrado.\n')
-    
-    if valor_IPI != '0':
-        valor_final_c_ipi = conta_IPI(valor, valor_IPI)
     else:
-        valor_final_c_ipi = valor
+        print(f"Modelo encontrado: {modelo}, Descrição: {descricao_material}")
+
+    valor_final_c_ipi = conta_IPI(valor, valor_IPI) if valor_IPI != '0' else valor
 
     materiais.append({
         'modelo': modelo,
@@ -914,15 +953,15 @@ def kit_servo(materiais):
         'quantidade': quantidade,
         'valor_final_c_ipi': valor_final_c_ipi,
         'valor_IPI': valor_IPI,
-        'valor_quantidade': valor_quantidade
+        'valor_quantidade': valor * quantidade
     })
 
 def outros_materiais(materiais):
-    modelo = input('Digite o nome do material: ')
-    descricao_material = input("Digite a descrição do material: ")
-    quantidade = int(input('Digite a quantidade do material: '))
-    valor = converter_valor(input('Digite o valor do item com IPI: '))
-    valor_IPI = input('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ')
+    modelo = tratamento_erro_texto('Digite o nome do material: ')
+    descricao_material = tratamento_erro_texto("Digite a descrição do material: ")
+    quantidade = tratamento_erro_int('Digite a quantidade do material: ')
+    valor = tratamento_erro_float('Digite o valor do item com IPI: ')
+    valor_IPI = tratamento_erro_texto('Digite o valor do IPI (0, 3,25, 6,5, 9,75): ', ['0', '3,25', '6,5', '9,75'])
     valor_quantidade = valor * quantidade
 
     if valor_IPI != '0':
@@ -942,28 +981,29 @@ def outros_materiais(materiais):
 #===================================ORÇAMENTOS===================================
 
 def orcamentos_email():
-    cliente = input('Digite o nome do cliente: ')
-    quantidade_cotacao = int(input("Quantos materiais serão cotados?: "))
-    forma_pagamento = input("Digite a forma de pagamento: ")
+    cliente = tratamento_erro_texto('Digite o nome do cliente: ')
+    quantidade_cotacao = tratamento_erro_int("Quantos materiais serão cotados?: ")
+    forma_pagamento = tratamento_erro_texto("Digite a forma de pagamento: ")
     materiais = []
 
     for _ in range(quantidade_cotacao):
         menu_materiais(materiais)
         
     texto_orcamento = texto_orcamento_email(cliente, forma_pagamento, materiais)
+    os.system('cls' if os.name == 'nt' else 'clear') #Limpa o terminal
     enviar_email_pyautogui(texto_orcamento)
 
 def orcamentos_whats():
-    cliente = input('Digite o nome do cliente: ')
-    quantidade_cotacao = int(input("Quantos materiais serão cotados?: "))
-    forma_pagamento = input("Digite a forma de pagamento: ")
+    cliente = tratamento_erro_texto('Digite o nome do cliente: ')
+    quantidade_cotacao = tratamento_erro_int("Quantos materiais serão cotados?: ")
+    forma_pagamento = tratamento_erro_texto("Digite a forma de pagamento: ")
     materiais = []
 
     for _ in range(quantidade_cotacao):
         menu_materiais(materiais)
        
-
     texto_orcamento = texto_orcamento_wsp(cliente, forma_pagamento, materiais)
+    os.system('cls' if os.name == 'nt' else 'clear') #Limpa o terminal
     enviar_wsp_pyautogui(texto_orcamento)
 
 #===================================ENVIAR ORÇAMENTO===================================
@@ -1003,5 +1043,42 @@ def converter_valor(valor_str):
     valor_str = valor_str.replace(',', '.')
     # Converte para float
     return float(valor_str)
+
+#===================================FUNÇÕES PARA TRATAMENTO DE ERROS===================================
+
+def tratamento_erro_int(mensagem, opcoes_validas=None):
+    while True:
+        try:
+            entrada = int(input(mensagem))
+            if opcoes_validas and entrada not in opcoes_validas:
+                print(f"Valor inválido. Por favor, escolha uma das seguintes opções: {', '.join(map(str, opcoes_validas))}")
+            else:
+                return entrada
+        except ValueError:
+            print("Por favor, insira um número inteiro válido.")
+
+def tratamento_erro_float(mensagem, opcoes_validas=None):
+    while True:
+        try:
+            entrada = float(input(mensagem).replace(',', '.'))
+            if opcoes_validas and entrada not in opcoes_validas:
+                print(f"Valor inválido. Por favor, escolha uma das seguintes opções: {', '.join(map(str, opcoes_validas))}")
+            else:
+                return entrada
+        except ValueError:
+            print("Por favor, insira um número decimal válido.")
+
+def tratamento_erro_texto(mensagem, opcoes_validas=None):
+    while True:
+        entrada = input(mensagem).strip().lower()  # Converte a entrada para minúsculas
+        if opcoes_validas:
+            # Converte as opções válidas para minúsculas e as compara
+            opcoes_validas_lower = [opcao.lower() for opcao in opcoes_validas]
+            if entrada not in opcoes_validas_lower:
+                print(f"Entrada inválida. Por favor, escolha uma das seguintes opções: {', '.join(opcoes_validas)}")
+            else:
+                return entrada
+        else:
+            return entrada
 
 #===================================FIM===================================
